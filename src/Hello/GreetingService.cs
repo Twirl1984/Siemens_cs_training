@@ -4,6 +4,7 @@ public sealed class GreetingService
 {
     public GreetingResult Process(string[] args)
     {
+        // Keep the original T01 scope: only empty input is rejected so the app behavior stays unchanged.
         if (args.Length == 0)
         {
             return GreetingResult.Error("Bitte gib einen Namen ein!", 1);
@@ -13,11 +14,6 @@ public sealed class GreetingService
         if (string.IsNullOrWhiteSpace(name))
         {
             return GreetingResult.Error("Der Name darf nicht leer sein.", 1);
-        }
-
-        if (double.TryParse(name, out _))
-        {
-            return GreetingResult.Error("Der Name muss ein Text sein.", 1);
         }
 
         return GreetingResult.Success($"Hallo, {name}!");
