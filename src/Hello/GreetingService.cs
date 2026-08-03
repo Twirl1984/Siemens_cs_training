@@ -21,9 +21,11 @@ public sealed class GreetingService
     }
 }
 
-public sealed record GreetingResult(bool IsSuccess, string Message, int ExitCode)
+public sealed record GreetingResult(string Message, int ExitCode)
 {
-    public static GreetingResult Success(string message) => new(true, message, 0);
+    public bool IsSuccess => ExitCode == 0;
 
-    public static GreetingResult Error(string message, int exitCode) => new(false, message, exitCode);
+    public static GreetingResult Success(string message) => new(message, 0);
+
+    public static GreetingResult Error(string message, int exitCode) => new(message, exitCode);
 }

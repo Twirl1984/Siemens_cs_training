@@ -6,43 +6,25 @@ public class GreetingServiceTests
 {
     private readonly GreetingService _sut = new();
 
-    [Fact]
-    public void Process_ReturnsError_WhenNoArgumentIsProvided()
+    [Theory]
+    [MemberData(nameof(ProcessCases))]
+    public void Process_ReturnsExpectedOutcome_ForGivenArguments(string[] args, bool expectedSuccess, int expectedExitCode, string expectedMessage)
     {
-        var result = _sut.Process(Array.Empty<string>());
+        var result = _sut.Process(args);
 
-        Assert.False(result.IsSuccess);
-        Assert.Equal(1, result.ExitCode);
-        Assert.Equal("Bitte gib einen Namen ein!", result.Message);
+        Assert.Equal(expectedSuccess, result.IsSuccess);
+        Assert.Equal(expectedExitCode, result.ExitCode);
+        Assert.Equal(expectedMessage, result.Message);
     }
 
-    [Fact]
-    public void Process_ReturnsError_WhenArgumentIsEmptyOrWhitespace()
+    public static IEnumerable<object[]> ProcessCases()
     {
-        var result = _sut.Process(new[] { "   " });
-
-        Assert.False(result.IsSuccess);
-        Assert.Equal(1, result.ExitCode);
-        Assert.Equal("Der Name darf nicht leer sein.", result.Message);
-    }
-
-    [Fact]
-    public void Process_ReturnsGreeting_WhenArgumentIsValid()
-    {
-        var result = _sut.Process(new[] { "Ada" });
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.ExitCode);
-        Assert.Equal("Hallo, Ada!", result.Message);
-    }
-
-    [Fact]
-    public void Process_TrimsSurroundingWhitespace_FromProvidedName()
-    {
-        var result = _sut.Process(new[] { "  Linus  " });
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(0, result.ExitCode);
-        Assert.Equal("Hallo, Linus!", result.Message);
+        return new[]
+        {
+            new object[] { Array.Empty<string>(), false, 1, "Bitte gib einen Namen ein!" },
+            new object[] { new[] { "   " }, false, 1, "Der Name darf nicht leer sein." },
+            new object[] { new[] { "Ada" }, true, 0, "Hallo, Ada!" },
+            new object[] { new[] { "  Linus  " }, true, 0, "Hallo, Linus!" }
+        };
     }
 }
