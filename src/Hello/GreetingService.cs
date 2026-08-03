@@ -16,7 +16,8 @@ public sealed class GreetingService
             return GreetingResult.Error("Der Name darf nicht leer sein.", 1);
         }
 
-        return GreetingResult.Success($"Hallo, {name}!");
+        string normalizedName = name.Trim();
+        return GreetingResult.Success($"Hallo, {normalizedName}!");
     }
 }
 

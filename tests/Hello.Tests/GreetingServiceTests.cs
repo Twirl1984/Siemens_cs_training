@@ -37,12 +37,12 @@ public class GreetingServiceTests
     }
 
     [Fact]
-    public void Process_PreservesWhitespaceInName_WhenArgumentIsProvided()
+    public void Process_TrimsSurroundingWhitespace_FromProvidedName()
     {
         var result = _sut.Process(new[] { "  Linus  " });
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.ExitCode);
-        Assert.Equal("Hallo,   Linus  !", result.Message);
+        Assert.Equal("Hallo, Linus!", result.Message);
     }
 }
