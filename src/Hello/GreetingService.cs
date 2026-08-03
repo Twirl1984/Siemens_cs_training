@@ -15,6 +15,11 @@ public sealed class GreetingService
             return GreetingResult.Error("Der Name darf nicht leer sein.", 1);
         }
 
+        if (double.TryParse(name, out _))
+        {
+            return GreetingResult.Error("Der Name muss ein Text sein.", 1);
+        }
+
         return GreetingResult.Success($"Hallo, {name}!");
     }
 }

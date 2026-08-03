@@ -37,6 +37,16 @@ public class GreetingServiceTests
     }
 
     [Fact]
+    public void Process_ReturnsError_WhenArgumentLooksLikeNumber()
+    {
+        var result = _sut.Process(new[] { "123" });
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal("Der Name muss ein Text sein.", result.Message);
+    }
+
+    [Fact]
     public void Process_PreservesNameWithWhitespaceAroundInput()
     {
         var result = _sut.Process(new[] { "  Linus  " });
