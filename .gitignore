@@ -483,3 +483,7 @@ $RECYCLE.BIN/
 
 # Screencast-Aufnahmen (Video gehoert nicht ins Repo)
 _recordings/
+
+# Exercism wird im CLI-Workspace ~/Exercism bearbeitet, nicht hier
+exercism/
+src/Hello/Scratch.cs

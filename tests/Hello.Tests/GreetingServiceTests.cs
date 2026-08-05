@@ -1,30 +1,39 @@
-﻿using Hello;
+using Hello;
 
 namespace Hello.Tests;
 
 public class GreetingServiceTests
 {
-    private readonly GreetingService _sut = new();
+    private readonly GreetingServiceChris _sut = new();
 
-    [Theory]
-    [MemberData(nameof(ProcessCases))]
-    public void Process_ReturnsExpectedOutcome_ForGivenArguments(string[] args, bool expectedSuccess, int expectedExitCode, string expectedMessage)
+    [Fact]
+    public void Process_ReturnsError_WhenNoArgumentIsProvided()
     {
-        var result = _sut.Process(args);
+        var result = _sut.Process(Array.Empty<string>());
 
-        Assert.Equal(expectedSuccess, result.IsSuccess);
-        Assert.Equal(expectedExitCode, result.ExitCode);
-        Assert.Equal(expectedMessage, result.Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal("Bitte gib einen Namen ein!", result.Message);
     }
 
-    public static IEnumerable<object[]> ProcessCases()
+    [Fact]
+    public void Process_ReturnsError_WhenArgumentIsEmptyOrWhitespace()
     {
-        return new[]
-        {
-            new object[] { Array.Empty<string>(), false, 1, "Bitte gib einen Namen ein!" },
-            new object[] { new[] { "   " }, false, 1, "Der Name darf nicht leer sein." },
-            new object[] { new[] { "Ada" }, true, 0, "Hallo, Ada!" },
-            new object[] { new[] { "  Linus  " }, true, 0, "Hallo, Linus!" }
-        };
+        var result = _sut.Process(new[] { "  " });
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal(1, result.ExitCode);
+        Assert.Equal("Der Name darf nicht leer sein.", result.Message);
+
+    }
+
+    [Fact]
+    public void Process_ReturnsGreeting_WhenArgumentIsValid()
+    {
+        var result = _sut.Process(new[] { " Ada " });
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(0, result.ExitCode);
+        Assert.Equal("Hallo, Ada!", result.Message);
     }
 }

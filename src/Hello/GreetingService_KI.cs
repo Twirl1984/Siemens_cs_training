@@ -1,9 +1,14 @@
 namespace Hello;
 
-public class GreetingServiceChris
+public sealed class GreetingService
 {
     public GreetingResult Process(string[] args)
     {
+        // NRT is a compile-time aid that null! defeats, so the public API boundary is guarded:
+        // ArgumentNullException names the offending parameter, NullReferenceException does not.
+        ArgumentNullException.ThrowIfNull(args);
+
+        // Keep the original T01 scope: only empty input is rejected so the app behavior stays unchanged.
         if (args.Length == 0)
         {
             return GreetingResult.Error("Bitte gib einen Namen ein!", 1);
